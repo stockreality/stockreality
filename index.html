@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stock Market Randomness Simulation</h1>
+    <p>Click the button to simulate stock market movements.</p>
+    <button onclick="addRandomLine()">Generate Random Line</button>
+    
+    <canvas id="stockChart" width="400" height="200"></canvas>
+
+    <script>
+        const canvas = document.getElementById("stockChart");
+        const ctx = canvas.getContext("2d");
+        let dataPoints = [25]; // Start in the middle (50/2 = 25)
+
+        function addRandomLine() {
+            let lastPoint = dataPoints[dataPoints.length - 1];
+            let randomDirection = Math.random() < 0.5 ? -1 : 1; // Randomly pick up or down
+            let change = Math.floor(Math.random() * 5) * randomDirection; // Change value between -5 and 5
+            let newPoint = lastPoint + change;
+            newPoint = Math.max(0, Math.min(50, newPoint)); // Keep it within 0 to 50 range
+            dataPoints.push(newPoint);
+
+            drawChart();
+        }
+
+        function drawChart() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+
+            // Draw the lines
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height - dataPoints[0] * 4); // Initial point
+
+            for (let i = 1; i < dataPoints.length; i++) {
+                let color = dataPoints[i] >= dataPoints[i - 1] ? "green" : "red";
+                ctx.strokeStyle = color; // Set color for line
+                ctx.lineTo(i * (canvas.width / 50), canvas.height - dataPoints[i] * 4);
+            }
+            ctx.stroke();
+        }
+    </script>
+</body>
+</html>
